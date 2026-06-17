@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { apiFetch } from '../../../lib/api';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { apiFetch } from '../../lib/api';
 import { CheckCircle2, Circle, Clock, Trash2, Plus, ArrowLeft } from 'lucide-react';
 
 interface Task {
@@ -10,19 +10,23 @@ interface Task {
   status: string;
 }
 
-export default function ProjectPage() {
-  const { id } = useParams();
+// выносим основную логику в отдельный компонент
+function ProjectBoard() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id'); // плучаем ID из URL: ?id=123
   const router = useRouter();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
   useEffect(() => {
-    apiFetch(`/projects/${id}/tasks`).then(setTasks).catch(console.error);
+    if (id) {
+      apiFetch(`/projects/${id}/tasks`).then(setTasks).catch(console.error);
+    }
   }, [id]);
 
   const addTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTaskTitle.trim()) return;
+    if (!newTaskTitle.trim() || !id) return;
     try {
       const task = await apiFetch(`/projects/${id}/tasks`, {
         method: 'POST',
@@ -92,5 +96,14 @@ export default function ProjectPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// оборачиваем в Suspense для успешной статической выгрузки
+export default function ProjectPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#0E1117] flex items-center justify-center text-blue-500">Загрузка...</div>}>
+      <ProjectBoard />
+    </Suspense>
   );
 }
