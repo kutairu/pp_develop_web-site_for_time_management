@@ -11,9 +11,12 @@ const statsRoutes = require('./routes/statsRoutes');
 const app = express();
 
 app.use(helmet());
-
 app.use(cors({
-  origin: 'http://localhost:3000', 
+  // добавляем ваш GitHub Pages в разрешенные адреса!
+  origin: [
+    'http://localhost:3000', 
+    'https://kutairu.github.io'
+  ], 
   credentials: true
 }));
 
