@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // Эта строчка превращает Next.js в статику
+  output: 'export',
   images: {
-    unoptimized: true, // Обязательно для GitHub Pages
-  }
+    unoptimized: true,
+  },
+  // Эта строка говорит Next.js, что сайт лежит в подпапке
+  basePath: '/pp_develop_web-site_for_time_management',
 };
 
-module.exports = nextConfig;
+module.exports = nextConfig; // (или export default nextConfig;)
