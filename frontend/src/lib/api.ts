@@ -1,5 +1,5 @@
 // Сразу указываем боевую ссылку на Render
-const API_URL = 'https://kutairu.github.io/pp_develop_web-site_for_time_management';
+const API_URL = 'https://pp-develop-web-site-for-time-management.onrender.com/api';
 
 export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
